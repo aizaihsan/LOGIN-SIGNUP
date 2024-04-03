@@ -2,44 +2,29 @@
 .container {
     max-width: 100%;
     overflow-x: auto;
-}
-
-h1 {
-    border-top: 2px solid #333;
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 34px;
-    background-color: #e4dede;
-    text-transform: uppercase;
-    border-bottom: 2px solid #333;
-    padding-bottom: 5px;
-    border-left: #333;
-    border-right: #333;
-    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+      
 
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th,
-td {
+th,td {
     border: 1px solid #dddddd;
     text-align: left;
     font-size:large;
     padding: 2px;
-    width: 80x;
+    width: 10px;
+    background-color: #f2f2f2
 }
 
 tr:nth-child(even) {
     background-color: #e8e6e6;
 }
 
-th {
-    background-color: #f2f2f2;
-}
 
 button {
     background-color: #4CAF50;
@@ -161,14 +146,6 @@ button:hover {
 
 
 
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-}
-
-
 .modal {
     display: none;
     /* Hidden by default */
@@ -189,51 +166,6 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.4);
     /* Black w/ opacity */
 }
-
-
-/* Dropdown container */
-#customColumns {
-    margin-top: 15px;
-}
-
-/* Dropdown label */
-label[for="customColumns"] {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-/* Dropdown select */
-#customColumns {
-    padding: 5px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 200px;
-}
-
-/* Dropdown options */
-#customColumns option {
-    font-size: 14px;
-}
-
-/* Dropdown arrow */
-#customColumns::after {
-    content: '\25BC'; /* Downward arrow */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none;
-}
-
-/* Style when dropdown is open */
-#customColumns:focus {
-    outline: none;
-    border-color: #007bff; /* Blue color */
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Blue shadow */
-}
-  
 #addRowForm {
     padding: 20px;
     border: 1px solid #ccc;
@@ -254,4 +186,32 @@ label[for="customColumns"] {
     padding: 5px;
     margin-bottom: 10px;
     box-sizing: border-box;
+}
+.dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard h1 {
+    margin: 0;
+    font-size: 40px;
+    text-align: center; /* Center the text */
+    flex: 1; /* Allow the h1 to take up remaining space */
+}
+
+.dashboard button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dashboard button:hover {
+    background-color: #0056b3;
 }
