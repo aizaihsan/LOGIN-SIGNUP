@@ -1,16 +1,58 @@
-let data = JSON.parse(localStorage.getItem('data')) || [];
+class DataTable {
+    constructor() {
+        this.data = JSON.parse(localStorage.getItem('data')) || [];
+        this.tableBody = document.getElementById("tablebody");
+        this.table = document.getElementById('data-table');
+        this.headers = this.table.querySelectorAll('th');
+        this.filters = {};
 
-let body = document.getElementById("tablebody");
+        this.init();
+    }
 
-document.addEventListener('DOMContentLoaded', function () {
-    let data = JSON.parse(localStorage.getItem('data')) || [];
+    init() {
+        this.updateTable();
 
-    function updateTable() {
-        let table = document.getElementById('tablebody');
-        table.innerHTML = '';
+        this.table.addEventListener('click', (event) => {
+            if (event.target.classList.contains('editButton')) {
+                this.openEditModal(event);
+            }
+        });
 
-        data.forEach((item) => {
-            let newRow = table.insertRow(-1);
+        this.table.addEventListener('input', (event) => {
+            if (event.target.tagName === 'INPUT' && event.target.type === 'text') {
+                this.filters[event.target.dataset.column] = event.target.value.toLowerCase();
+                this.filterTable();
+            }
+        });
+
+        document.getElementById('addButton').addEventListener('click', () => {
+            document.getElementById('addRowForm').style.display = 'block';
+        });
+
+        document.getElementById('cancelButton').addEventListener('click', () => {
+            document.getElementById('addRowForm').style.display = 'none';
+        });
+
+        document.getElementById('addRowFormData').addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.addRow();
+        });
+
+        document.getElementById('editForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.editRow();
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = "login.html";
+        });
+    }
+
+    updateTable() {
+        this.tableBody.innerHTML = '';
+        this.data.forEach((item, index) => {
+            let newRow = this.tableBody.insertRow(-1);
             newRow.innerHTML = `
                 <td>${item["ID"]}</td>
                 <td>${item["Product Name"]}</td>
@@ -20,99 +62,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${item["In stock"]}</td>
                 <td>${item["Buying price"]}</td>
                 <td>${item["Sale price"]}</td>
-             
-                <td><button class="deleteButton">Delete</button>
-                <button class="editButton">Edit</button></td>
+                <td><button class="deleteButton">Delete</button><button class="editButton">Edit</button></td>
             `;
-
+    
             newRow.querySelector('.deleteButton').addEventListener('click', () => {
-                let index = data.indexOf(item);
-                data.splice(index, 1);
-                localStorage.setItem('data', JSON.stringify(data));
-                updateTable();
+                this.data.splice(index, 1);
+                localStorage.setItem('data', JSON.stringify(this.data));
+                this.updateTable();
             });
-
         });
     }
-
-    updateTable();
-
-    document.getElementById('addButton').addEventListener('click', () => {
-        document.getElementById('addRowForm').style.display = 'block';
-    });
-
-    document.getElementById('cancelButton').addEventListener('click', () => {
-        document.getElementById('addRowForm').style.display = 'none';
-    });
-
-    document.getElementById('addRowFormData').addEventListener('submit', (event) => {
-        event.preventDefault();
-        let id = document.getElementById('id').value;
-        let productName = document.getElementById('productName').value;
-        let productTitle = document.getElementById('productTitle').value;
-        let productDescription = document.getElementById('productDescription').value;
-        let productVendor = document.getElementById('productVendor').value;
-        let inStock = document.getElementById('inStock').value;
-        let buyingPrice = document.getElementById('buyingPrice').value;
-        let salePrice = document.getElementById('salePrice').value;
-
-
-
+    
+    addRow() {
         let newData = {
-            "ID": id,
-            "Product Name": productName,
-            "Product title": productTitle,
-            "Product description": productDescription,
-            "Product vendor": productVendor,
-            "In stock": inStock,
-            "Buying price": buyingPrice,
-            "Sale price": salePrice,
-
+            "ID": document.getElementById('id').value,
+            "Product Name": document.getElementById('productName').value,
+            "Product title": document.getElementById('productTitle').value,
+            "Product description": document.getElementById('productDescription').value,
+            "Product vendor": document.getElementById('productVendor').value,
+            "In stock": document.getElementById('inStock').value,
+            "Buying price": document.getElementById('buyingPrice').value,
+            "Sale price": document.getElementById('salePrice').value,
         };
 
-        data.push(newData);
-        localStorage.setItem('data', JSON.stringify(data));
-        updateTable();
+        this.data.push(newData);
+        localStorage.setItem('data', JSON.stringify(this.data));
+        this.updateTable();
         document.getElementById('addRowFormData').reset();
         document.getElementById('addRowForm').style.display = 'none';
+    }
 
-
-    });
-
-    // Event listener for edit button in table rows
-    document.getElementById('tablebody').addEventListener('click', (event) => {
-        if (event.target.classList.contains('editButton')) {
-            // Get the row that was clicked
-            let row = event.target.closest('tr');
-
-            // Populate the edit form with the row's data
-            document.getElementById('editId').value = row.cells[0].textContent;
-            document.getElementById('editProductName').value = row.cells[1].textContent;
-            document.getElementById('editProductTitle').value = row.cells[2].textContent;
-            document.getElementById('editProductDescription').value = row.cells[3].textContent;
-            document.getElementById('editProductVendor').value = row.cells[4].textContent;
-            document.getElementById('editInStock').value = row.cells[5].textContent;
-            document.getElementById('editBuyingPrice').value = row.cells[6].textContent;
-            document.getElementById('editSalePrice').value = row.cells[7].textContent;
-
-
-            // Display the edit modal
-            document.getElementById('editModalContent').style.display = 'block';
-        }
-    });
-
-    // Event listener for edit form submission
-    document.getElementById('editForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        // Get the ID of the edited item
+    editRow() {
         let id = document.getElementById('editId').value;
+        let index = this.data.findIndex(item => item["ID"] === id);
 
-        // Find the index of the item in the data array
-        let index = data.findIndex(item => item["ID"] === id);
-
-        // Update the item in the data array
-        data[index] = {
+        this.data[index] = {
             "ID": id,
             "Product Name": document.getElementById('editProductName').value,
             "Product title": document.getElementById('editProductTitle').value,
@@ -121,79 +105,47 @@ document.addEventListener('DOMContentLoaded', function () {
             "In stock": document.getElementById('editInStock').value,
             "Buying price": document.getElementById('editBuyingPrice').value,
             "Sale price": document.getElementById('editSalePrice').value,
-
         };
 
-        // Update the table
-        updateTable();
-
-        // Update local storage
-        localStorage.setItem('data', JSON.stringify(data));
-
-        // Hide the edit modal
+        localStorage.setItem('data', JSON.stringify(this.data));
+        this.updateTable();
         document.getElementById('editModalContent').style.display = 'none';
-    });
+    }
 
-    // Get the table
-    let table = document.getElementById('data-table');
+    openEditModal(event) {
+        let row = event.target.closest('tr');
+        document.getElementById('editId').value = row.cells[0].textContent;
+        document.getElementById('editProductName').value = row.cells[1].textContent;
+        document.getElementById('editProductTitle').value = row.cells[2].textContent;
+        document.getElementById('editProductDescription').value = row.cells[3].textContent;
+        document.getElementById('editProductVendor').value = row.cells[4].textContent;
+        document.getElementById('editInStock').value = row.cells[5].textContent;
+        document.getElementById('editBuyingPrice').value = row.cells[6].textContent;
+        document.getElementById('editSalePrice').value = row.cells[7].textContent;
+        document.getElementById('editModalContent').style.display = 'block';
 
-    // Get the table headers
-    let headers = table.querySelectorAll('th');
+        document.querySelector('.modal-close').onclick = () => {
+            document.getElementById("editModalContent").style.display = "none";
+        };
+    }
 
-    // Create an object to store filter values for each column
-    let filters = {};
-
-    // Assuming headers is an array of th elements representing table headers
-    headers.forEach((header, index) => {
-        // Skip the last header (Actions column)
-        if (index === headers.length - 1) {
-            return;
-        }
-
-        let filterInput = document.createElement('input');
-        filterInput.setAttribute('type', 'text');
-        filterInput.setAttribute('placeholder', 'Filter...');
-
-        filterInput.addEventListener('input', () => {
-            filters[index] = filterInput.value.toLowerCase();
-            filterTable();
-        });
-
-        header.appendChild(filterInput);
-    });
-
-
-    function filterTable() {
-        let rows = table.querySelectorAll('tbody tr');
-
+    filterTable() {
+        let rows = this.table.querySelectorAll('tbody tr');
         rows.forEach(row => {
             let display = true;
-
-            // Iterate over all columns except the last one (Actions column)
             for (let i = 0; i < row.cells.length - 1; i++) {
-                if (!filters.hasOwnProperty(i)) continue; // Skip if not a filterable column
-
+                if (!this.filters.hasOwnProperty(i)) continue;
                 let cellValue = row.cells[i].textContent.toLowerCase();
-                if (cellValue.indexOf(filters[i]) === -1) {
+                if (cellValue.indexOf(this.filters[i]) === -1) {
                     display = false;
-                    break; // Exit the loop early if any filter condition is not met
+                    break;
                 }
             }
-
-            if (display) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+            row.style.display = display ? '' : 'none';
         });
     }
-    document.getElementById('logoutButton').addEventListener('click', (event) => {
-        event.preventDefault();
+}
 
-        window.location.href = "login.html";
-
-
-    });
-
-
+document.addEventListener('DOMContentLoaded', function () {
+    let dataTable = new DataTable();
 });

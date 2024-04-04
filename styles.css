@@ -1,15 +1,17 @@
 /* CSS for styling the table */
 .container {
-    max-width: 100%;
+    width: auto;
     overflow-x: auto;
     justify-content: space-between;
     align-items: center;
-      
-
+    
+   
 }
 table {
-    width: 100%;
+    width:100%;
     border-collapse: collapse;
+    justify-content: space-between;
+    
 }
 
 th,td {
@@ -46,34 +48,6 @@ button {
 button:hover {
     background-color: #45a049;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-@media screen and (max-width: 600px) {
-    table {
-        border: 0;
-    }
-
-    table thead {
-        display: none;
-    }
-
-    table tr {
-        border-bottom: 3px solid #dddddd;
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    table td {
-        border-bottom: 1px solid #dddddd;
-        display: block;
-        text-align: right;
-    }
-
-    table td::before {
-        content: attr(data-label);
-        float: left;
-        font-weight: bold;
-    }
 }
 
 
@@ -119,8 +93,6 @@ button:hover {
 }
 
 
-
-
 /* CSS for modal content */
 .modal-content {
     display: none;
@@ -142,9 +114,6 @@ button:hover {
     right: 10px;
     cursor: pointer;
 }
-
-
-
 
 .modal {
     display: none;
@@ -173,6 +142,7 @@ button:hover {
     width: 300px;
     margin: 0 auto;
     background-color: #f9f9f9;
+    overflow: auto;
 }
 
 #addRowForm label {
@@ -187,13 +157,18 @@ button:hover {
     margin-bottom: 10px;
     box-sizing: border-box;
 }
+
+/*CSS Dashboard */
+
 .dashboard {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #f0f0f0;
+    background-color:#97b9c48f;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 21px;
 }
 
 .dashboard h1 {
@@ -201,6 +176,7 @@ button:hover {
     font-size: 40px;
     text-align: center; /* Center the text */
     flex: 1; /* Allow the h1 to take up remaining space */
+    
 }
 
 .dashboard button {
@@ -210,6 +186,7 @@ button:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-right: 20px;
 }
 
 .dashboard button:hover {
